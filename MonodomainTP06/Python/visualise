@@ -1,0 +1,35 @@
+gfx create region monodomain;
+
+# Read in the sequence of nodal positions.
+for ($i=0; $i<=10000000; $i+=100)
+  {
+     $filename = sprintf("Time_1_%d.part0.exnode", $i);
+     print "Reading $filename time $i\n";
+     gfx read node "$example/$filename" time $i region monodomain;
+  }
+
+# Read in the exnodelement description
+gfx read elements $example/MonodomainTP.part0.exelem region monodomain;
+
+# The input files do not describe faces, so create them here so we can visualise lines.
+gfx define face egroup monodomain;
+
+# Refine tessellation for nicer graphics (less discretization effects).
+gfx define tessellation default minimum_divisions "16" refinement_factors "1";
+
+gfx modify g_element monodomain general clear;
+# Visualise element lines
+gfx modify g_element monodomain lines coordinate Coordinate select_on material default selected_material default_selected;
+# View surfaces with solution plotted
+gfx modify g_element monodomain surfaces coordinate Coordinate select_on material default data Vm spectrum default selected_material default_selected render_shaded;
+gfx modify spectrum default autorange;
+# Create axes
+gfx modify g_element "/" point  glyph axes_xyz general size "1*1*1" centre 0,0,0 font default select_on material default selected_material default_selected;
+
+# Open window to view solution
+gfx create window 1
+
+# Set the timekeeper playing
+gfx timekeeper default speed 10 skip;
+
+gfx modify window 1 set antialias 4

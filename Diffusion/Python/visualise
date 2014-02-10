@@ -1,0 +1,22 @@
+gfx create region diffusion;
+gfx read region DiffusionExample.xml region diffusion;
+
+# The input files do not describe faces, so create them here so we can visualise lines.
+#gfx define face egroup diffusion;
+
+# Refine tessellation for nicer graphics (less discretization effects).
+gfx define tessellation default minimum_divisions "16" refinement_factors "1";
+
+gfx modify g_element diffusion general clear;
+# Visualise element lines
+gfx modify g_element diffusion lines coordinate diffusion.geometric select_on material default selected_material default_selected;
+# View surfaces with solution plotted
+gfx modify g_element diffusion surfaces coordinate diffusion.geometric select_on material default data diffusion.u spectrum default selected_material default_selected render_shaded;
+gfx modify spectrum default autorange;
+# Create axes
+gfx modify g_element "/" point  glyph axes_xyz general size "1*1*1" centre 0,0,0 font default select_on material default selected_material default_selected;
+
+# Open window to view solution
+gfx create window 1
+
+gfx modify window 1 set antialias 4
